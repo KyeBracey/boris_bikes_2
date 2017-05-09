@@ -7,6 +7,8 @@ class DockingStation
   end
 
   def release_bike
+    raise "No bike available!" unless @bike_docked
+    @bike_docked = false
     Bike.new
   end
 
