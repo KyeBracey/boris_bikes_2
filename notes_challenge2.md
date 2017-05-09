@@ -28,10 +28,10 @@ Draw a table:
 |Objects|Messages|
 |-------|--------|
 |Person| |
-|Docking Station|release_bike|
-|Bike|see_working_bikes|
+|DockingStation|release_bike|
+|Bike|working?|
 
 
 Draw a diagram:
 Docking Station [release_bike] --> Bike
-Person [see_working_bikes] --> Bike [working - true or false] 
+Person [see_working_bikes] --> Bike [working - true or false]
