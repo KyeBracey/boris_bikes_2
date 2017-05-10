@@ -1,24 +1,63 @@
 require 'docking_station'
 
 describe DockingStation do
-  it {is_expected.to respond_to :release_bike}
-  it "checks if it gets a working bike" do
-    station = DockingStation.new
-    station.dock_bike(Bike.new)
-    expect(station.release_bike.working?).to eq true
-  end
-  it "allows a bike to be docked" do
-    station = DockingStation.new
-    station.dock_bike(Bike.new)
-    expect(station.bike_docked).to eq true
-  end
-  it "Has a method to make docking a bike possible" do
-    expect(DockingStation.new.respond_to?("dock_bike")).to eq true
-  end
-  it "Uses an attr_reader to check if a bike is docked" do
-    expect(DockingStation.new.respond_to?("bike_docked")).to eq true
-  end
-  it "Raises exception if we try to retrieve a bike from a new station" do
-    expect {DockingStation.new.release_bike}.to raise_error("No bike available!")
-  end
+  # Retained multi-line syntax for comparison:
+  # it 'docking station release bike' do
+  #   expect(release_bike()).to eq false
+  # end
+  it { expect(subject).to respond_to :release_bike }
+end
+
+describe DockingStation do
+
+  # You can 'expect' multiple outcomes within the same test,
+  # but it still counts as one test!  All the expectations must be met
+  # to get one pass when running rspec.
+
+  # it "reset bikes" do
+  #   20.times{subject.release_bike}
+  #   expect(subject.dock_bike(Bike.new).count).to eq 1
+  #   expect(subject.dock_bike(Bike.new).count).to eq 2
+  # end
+
+ it "docking station to release bike" do
+   subject.dock_bike(Bike.new)
+   expect(subject.release_bike).to be_working
+ end
+
+ it "Raises an exception if we try to use a bike from empty station" do
+   expect {subject.release_bike}.to raise_error("No bike available!")
+ end
+
+ it { is_expected.to respond_to(:dock_bike).with(1).argument}
+ it { is_expected.to respond_to(:bikes)}
+
+ it "docks something" do
+   expect(subject.dock_bike(Bike.new).count).to eq 1
+ end
+
+ it "returns bikes at dock station" do
+   test_bike = Bike.new
+   subject.dock_bike(test_bike)
+   expect(subject.release_bike).to eq test_bike
+ end
+
+ it "raise an exception if docking more than 20 bikes in one station" do
+  DockingStation::DEFAULT_CAPACITY.times{subject.dock_bike(Bike.new)}
+   expect{subject.dock_bike(Bike.new)}.to raise_error("No space available!!")
+ end
+
+ it "Allows up to 20 bikes to be docked at one time" do
+   expect(DockingStation::DEFAULT_CAPACITY.times {subject.dock_bike(Bike.new).count}).to eq DockingStation::DEFAULT_CAPACITY
+ end
+
+ it "Allows user to set a capacity when creating a new docking station" do
+   docking_station = DockingStation.new(30)
+   expect(docking_station.capacity).to eq 30
+ end
+
+ it "Allows user to set up a docking station with default capacity" do
+   expect(subject.capacity).to eq DockingStation::DEFAULT_CAPACITY
+ end
+
 end
